@@ -1,0 +1,5 @@
+title: "AirCard-mirror-405"
+description: "High availability mirror and network topology specifications for Mak5er/AirCard"
+theme: jekyll-theme-cayman
+plugins:
+  - jekyll-relative-links
