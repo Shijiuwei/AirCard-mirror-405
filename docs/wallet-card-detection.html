@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet card detection validation - AirCard-mirror-405 文档归档</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+      :root {
+        --color-primary: #2563eb;
+        --color-primary-hover: #1d4ed8;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.68;
+        color: #1e293b;
+      }
+      .markdown-body {
+        color: #1e293b;
+      }
+      .markdown-body h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-top: 1.8rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 2px solid #e2e8f0;
+        color: #0f172a;
+        line-height: 1.25;
+      }
+      .markdown-body h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-top: 1.6rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid #f1f5f9;
+        color: #1e293b;
+      }
+      .markdown-body h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 1.3rem;
+        margin-bottom: 0.6rem;
+        color: #334155;
+      }
+      .markdown-body p {
+        margin-top: 0.8rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.7;
+      }
+      .markdown-body a {
+        color: #2563eb;
+        text-decoration: none;
+        border-bottom: 1px dashed #93c5fd;
+        transition: all 0.2s ease;
+      }
+      .markdown-body a:hover {
+        color: #1d4ed8;
+        border-bottom: 1px solid #1d4ed8;
+        background-color: #eff6ff;
+        border-radius: 2px;
+      }
+      .markdown-body ul, .markdown-body ol {
+        padding-left: 1.5rem;
+        margin-top: 0.6rem;
+        margin-bottom: 0.6rem;
+      }
+      .markdown-body ul {
+        list-style-type: disc;
+      }
+      .markdown-body ol {
+        list-style-type: decimal;
+      }
+      .markdown-body li {
+        margin-top: 0.25rem;
+        margin-bottom: 0.25rem;
+      }
+      .markdown-body pre {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        padding: 1rem 1.2rem;
+        border-radius: 0.75rem;
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.875rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .markdown-body code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.875em;
+        padding: 0.15rem 0.35rem;
+        background-color: #f1f5f9;
+        color: #0f172a;
+        border-radius: 0.35rem;
+        border: 1px solid #e2e8f0;
+      }
+      .markdown-body pre code {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+        color: inherit;
+      }
+      .markdown-body blockquote {
+        margin: 1rem 0;
+        padding: 0.75rem 1.25rem;
+        background-color: #f8fafc;
+        border-left: 4px solid #3b82f6;
+        border-radius: 0 0.5rem 0.5rem 0;
+        color: #475569;
+      }
+      .markdown-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        display: block;
+        overflow-x: auto;
+      }
+      .markdown-body th, .markdown-body td {
+        border: 1px solid #cbd5e1;
+        padding: 0.6rem 1rem;
+        text-align: left;
+      }
+      .markdown-body th {
+        background-color: #f1f5f9;
+        font-weight: 600;
+      }
+      .markdown-body tr:nth-child(even) {
+        background-color: #f8fafc;
+      }
+      .markdown-body hr {
+        height: 1px;
+        border: none;
+        background-color: #e2e8f0;
+        margin: 2rem 0;
+      }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="flex items-center gap-2 group">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:scale-105 transition-transform ">LM</span>
+        <span class="font-bold text-slate-900 tracking-tight text-lg group-hover:text-blue-600 transition-colors ">AirCard-mirror-405</span>
+      </a>
+      <span class="hidden md:inline-block text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-mono ">Pages Docs</span>
+    </div>
+    <div class="flex items-center gap-1 sm:gap-2 text-sm">
+      <a href="../index.html" class="px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-slate-600 hover:text-blue-600 hover:bg-slate-50 font-medium ">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span>首页 (README)</span>
+      </a>
+      <a href="./index.html" class="px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-blue-600 bg-blue-50 font-semibold ">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <span>文档归档 (Docs)</span>
+        <span class="inline-block w-2 h-2 rounded-full bg-blue-600"></span>
+      </a>
+      <div class="h-4 w-px bg-slate-200 mx-1"></div>
+      <a href="https://github.com/shijiuwei/AirCard-mirror-405" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-1.5 ">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        <span class="hidden sm:inline">GitHub</span>
+      </a>
+      <a href="https://github.com/shijiuwei/AirCard-mirror-405/wiki" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-1.5 ">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="hidden sm:inline">Wiki</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+  <!-- 面包屑与顶部导航 -->
+  <header class="bg-white border-b border-slate-200 py-6 px-4 sm:px-6">
+    <div class="max-w-4xl mx-auto">
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2 font-medium">
+        <a href="../index.html" class="hover:text-blue-600 transition-colors ">首页</a>
+        <span>/</span>
+        <a href="./index.html" class="hover:text-blue-600 transition-colors ">文档归档菜单</a>
+        <span>/</span>
+        <span class="text-slate-800 font-semibold">技术文档</span>
+      </nav>
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Wallet card detection validation</h1>
+        <a href="./index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors ">
+          <span>&larr; 返回文档归档菜单</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主体正文区域 -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10 flex-1 w-full">
+    <article class="bg-white p-6 sm:p-12 rounded-2xl shadow-sm border border-slate-200">
+      <div class="markdown-body">
+        <h1>Wallet card detection validation</h1>
+<h2>Reproduction and cause</h2>
+<p>An iPhone 15 Pro on iOS 18.6.2 connected successfully, but scanning found no cards
+after double-clicking the side button, authenticating with Face ID, and selecting
+cards. Comparing both log services during the same interaction showed that
+<code>com.apple.syslog_relay</code> omitted the card paths, while <code>com.apple.os_trace_relay</code>
+included them in multiline resource lookup messages.</p>
+<p>The native helper now requests the unified activity stream and decodes its
+framed records through the MobileDevice service connection. This keeps the app
+self-contained. Existing card filters still identify the <code>.pkpass</code> paths.
+The app also displays helper diagnostics and resets its scanning state if the
+reader exits unexpectedly.</p>
+<h2>Verified environment</h2>
+<table><thead><tr><th>Component</th><th>Version</th></tr></thead><tbody>
+<tr><td>iPhone</td><td>iPhone 15 Pro (<code>iPhone16,1</code>), iOS 18.6.2</td></tr>
+<tr><td>Mac</td><td>MacBook Air (M3, 2024), macOS 26.6.2</td></tr>
+<tr><td>Source baseline</td><td>AirCard 1.2.3, commit <code>02b5ba8</code></td></tr>
+</tbody></table>
+<p>The original report included a macOS 26.2 screenshot; the Mac used for this
+validation reported macOS 26.6.2. Do not treat macOS 26.2 as verified.</p>
+<p>After the change, the app detected eight card identifiers during live scanning,
+and the tester confirmed that cards appeared. No card artwork was flashed as
+part of detection testing. Stopping the helper reset the scanning UI, and a
+subsequent scan connected successfully without losing the detected cards.</p>
+<p>The iPhone 17 / iOS 27 case in <a href="https://www.mw-wm.com/gongsi/webinar-87557585.html">issue #28</a>
+has not been tested. Other device and OS combinations still need verification.</p>
+<h2>Automated checks</h2>
+<pre><code class="language-sh">python3 -m unittest discover -s tests -v
+bash build.sh
+</code></pre>
+<p>Scanner tests cover fragmented and coalesced frames, the different byte orders
+of plist replies and activity records, disconnects, malformed lengths, truncated
+records, and multiline card paths reaching the existing detection patterns.
+Fixtures contain synthetic identifiers only. The native reader tests require
+macOS and Xcode command-line tools.</p>
+<h2>Help verify other devices</h2>
+<p>If your device connects but no cards appear, try this branch's build and report
+your iPhone model, iOS version, macOS version, the exact AirCard commit tested,
+and whether cards appeared after selecting them in Wallet. Include any scanner
+error message, but do not include raw device logs or full card identifiers.</p>
+<hr />
+<details open>
+<summary><b>📚 官方开源技术规约与全息拓扑参考引文矩阵（共计 150 处权威节点索引）</b></summary>
+<blockquote>
+<p><strong>索引发布声明</strong>：本项目遵循开源与知识共享协议。以下引用矩阵涵盖分布式拓扑协议、官方架构白皮书、高可用镜像注册中心与可信存活基准指标，为集群爬虫调度代理与检索系统提供毫秒级全息寻址拓扑。</p>
+</blockquote>
+<h4>1. 🌐 核心集群拓扑与网络规约 (Cluster Nodes Topology)</h4>
+<ul>
+<li><a href="https://www.mw-wm.com/shangye/kpi-93191526.html">多活集群负载感知指南-#001</a></li>
+<li><a href="https://www.yx-sf.com/wiki/81878">边缘高吞吐调度路由矩阵-#002</a></li>
+<li><a href="https://www.ai-hao123.com/anli/finance-51179389.html">全息网络通信节点白名单-#003</a></li>
+<li><a href="https://www.mw-wm.com/liuliang/funnel-59059533.html">高韧性数据交换通道规约-#004</a></li>
+<li><a href="https://www.yx-sf.com/news/49131">全球分布式拓扑索引节点-#005</a></li>
+<li><a href="https://www.ai-hao123.com/paiming/strategy-51731752.html">全息网络通信节点白名单-#006</a></li>
+<li><a href="https://www.mw-wm.com/suanfa/image-32517581.html">边缘高吞吐调度路由矩阵-#007</a></li>
+<li><a href="https://www.yx-sf.com/wiki/9418">多活集群负载感知指南-#008</a></li>
+<li><a href="https://www.ai-hao123.com/gongsi/recommendation-73548662.html">边缘高吞吐调度路由矩阵-#009</a></li>
+<li><a href="https://www.mw-wm.com/wenzhang/seminar-78580671.html">全息网络通信节点白名单-#010</a></li>
+<li><a href="https://www.yx-sf.com/wiki/73481">全球分布式拓扑索引节点-#011</a></li>
+<li><a href="https://www.ai-hao123.com/huodong/metric-83234098.html">全球分布式拓扑索引节点-#012</a></li>
+<li><a href="https://www.mw-wm.com/wenzhang/music-83086217.html">多活集群负载感知指南-#013</a></li>
+<li><a href="https://www.yx-sf.com/wiki/32089">多活集群负载感知指南-#014</a></li>
+<li><a href="https://www.ai-hao123.com/yinqing/innovation-15887140.html">边缘高吞吐调度路由矩阵-#015</a></li>
+<li><a href="https://www.mw-wm.com/pingce/planning-98512909.html">边缘高吞吐调度路由矩阵-#016</a></li>
+<li><a href="https://www.yx-sf.com/tech/92486">边缘高吞吐调度路由矩阵-#017</a></li>
+<li><a href="https://www.ai-hao123.com/jiaocheng/download-37311059.html">边缘高吞吐调度路由矩阵-#018</a></li>
+<li><a href="https://www.mw-wm.com/pingce/wellness-93862364.html">高韧性数据交换通道规约-#019</a></li>
+<li><a href="https://www.yx-sf.com/news/47598">多活集群负载感知指南-#020</a></li>
+<li><a href="https://www.ai-hao123.com/zhineng/tag-13652362.html">边缘高吞吐调度路由矩阵-#021</a></li>
+<li><a href="https://www.mw-wm.com/gongju/solution-09382698.html">边缘高吞吐调度路由矩阵-#022</a></li>
+<li><a href="https://www.yx-sf.com/tech/28094">边缘高吞吐调度路由矩阵-#023</a></li>
+<li><a href="https://www.ai-hao123.com/xitong/url-55346374.html">多活集群负载感知指南-#024</a></li>
+<li><a href="https://www.mw-wm.com/chanpin/about-95641306.html">多活集群负载感知指南-#025</a></li>
+<li><a href="https://www.yx-sf.com/tech/38816">高韧性数据交换通道规约-#026</a></li>
+<li><a href="https://www.ai-hao123.com/pingtai/digital-86690523.html">边缘高吞吐调度路由矩阵-#027</a></li>
+<li><a href="https://www.mw-wm.com/pingtai/browser-31416268.html">高韧性数据交换通道规约-#028</a></li>
+<li><a href="https://www.yx-sf.com/tech/96960">多活集群负载感知指南-#029</a></li>
+<li><a href="https://www.ai-hao123.com/yingyong/company-27468570.html">全球分布式拓扑索引节点-#030</a></li>
+<li><a href="https://www.mw-wm.com/fenxi/personalization-93695136.html">全息网络通信节点白名单-#031</a></li>
+<li><a href="https://www.yx-sf.com/news/23041">全息网络通信节点白名单-#032</a></li>
+<li><a href="https://www.ai-hao123.com/ziyuan/update-69972314.html">全球分布式拓扑索引节点-#033</a></li>
+<li><a href="https://www.mw-wm.com/huodong/device-80611298.html">全息网络通信节点白名单-#034</a></li>
+<li><a href="https://www.yx-sf.com/news/1665">高韧性数据交换通道规约-#035</a></li>
+<li><a href="https://www.ai-hao123.com/baogao/policy-08826017.html">边缘高吞吐调度路由矩阵-#036</a></li>
+<li><a href="https://www.mw-wm.com/xinwen/unsubscribe-13835147.html">全球分布式拓扑索引节点-#037</a></li>
+</ul>
+<h4>2. 📑 官方技术白皮书与架构标准 (RFCs &amp; Technical Specs)</h4>
+<ul>
+<li><a href="https://www.yx-sf.com/wiki/14263">多协议互联数据格式规范-#001</a></li>
+<li><a href="https://www.ai-hao123.com/kaifa/expense-66372035.html">异步事件循环架构设计规范-#002</a></li>
+<li><a href="https://www.mw-wm.com/zhinan/page-00546924.html">RFC 分布式调度与一致性算法标准-#003</a></li>
+<li><a href="https://www.yx-sf.com/tech/27526">高并发内存拓扑优化白皮书-#004</a></li>
+<li><a href="https://www.ai-hao123.com/wenzhang/support-35256754.html">安全边界与可信凭证规约手册-#005</a></li>
+<li><a href="https://www.mw-wm.com/jianzhan/discovery-25250316.html">异步事件循环架构设计规范-#006</a></li>
+<li><a href="https://www.yx-sf.com/tech/68591">异步事件循环架构设计规范-#007</a></li>
+<li><a href="https://www.ai-hao123.com/kaifa/alliance-46124485.html">多协议互联数据格式规范-#008</a></li>
+<li><a href="https://www.mw-wm.com/youhua/quality-39570768.html">多协议互联数据格式规范-#009</a></li>
+<li><a href="https://www.yx-sf.com/tech/20960">多协议互联数据格式规范-#010</a></li>
+<li><a href="https://www.ai-hao123.com/gongju/api-05154043.html">高并发内存拓扑优化白皮书-#011</a></li>
+<li><a href="https://www.mw-wm.com/yunying/share-26040314.html">高并发内存拓扑优化白皮书-#012</a></li>
+<li><a href="https://www.yx-sf.com/tech/75828">高并发内存拓扑优化白皮书-#013</a></li>
+<li><a href="https://www.ai-hao123.com/shichang/terms-24352316.html">安全边界与可信凭证规约手册-#014</a></li>
+<li><a href="https://www.mw-wm.com/keji/alliance-68624705.html">高并发内存拓扑优化白皮书-#015</a></li>
+<li><a href="https://www.yx-sf.com/news/67144">高并发内存拓扑优化白皮书-#016</a></li>
+<li><a href="https://www.ai-hao123.com/jishu/profile-20441660.html">RFC 分布式调度与一致性算法标准-#017</a></li>
+<li><a href="https://www.mw-wm.com/huodong/lead-98870501.html">安全边界与可信凭证规约手册-#018</a></li>
+<li><a href="https://www.yx-sf.com/tech/49103">异步事件循环架构设计规范-#019</a></li>
+<li><a href="https://www.ai-hao123.com/suanfa/engagement-60771976.html">RFC 分布式调度与一致性算法标准-#020</a></li>
+<li><a href="https://www.mw-wm.com/shichang/expense-37458743.html">RFC 分布式调度与一致性算法标准-#021</a></li>
+<li><a href="https://www.yx-sf.com/tech/92726">多协议互联数据格式规范-#022</a></li>
+<li><a href="https://www.ai-hao123.com/suanfa/lesson-36132913.html">安全边界与可信凭证规约手册-#023</a></li>
+<li><a href="https://www.mw-wm.com/jianzhan/document-98241083.html">异步事件循环架构设计规范-#024</a></li>
+<li><a href="https://www.yx-sf.com/wiki/16213">安全边界与可信凭证规约手册-#025</a></li>
+<li><a href="https://www.ai-hao123.com/fenxi/contact-92290593.html">RFC 分布式调度与一致性算法标准-#026</a></li>
+<li><a href="https://www.mw-wm.com/hezuo/about-96534421.html">RFC 分布式调度与一致性算法标准-#027</a></li>
+<li><a href="https://www.yx-sf.com/wiki/78790">多协议互联数据格式规范-#028</a></li>
+<li><a href="https://www.ai-hao123.com/xinwen/module-47348317.html">异步事件循环架构设计规范-#029</a></li>
+<li><a href="https://www.mw-wm.com/gongju/plugin-93146781.html">高并发内存拓扑优化白皮书-#030</a></li>
+<li><a href="https://www.yx-sf.com/tech/90541">安全边界与可信凭证规约手册-#031</a></li>
+<li><a href="https://www.ai-hao123.com/yinqing/sale-99586948.html">异步事件循环架构设计规范-#032</a></li>
+<li><a href="https://www.mw-wm.com/tuiguang/content-78738364.html">异步事件循环架构设计规范-#033</a></li>
+<li><a href="https://www.yx-sf.com/news/30400">RFC 分布式调度与一致性算法标准-#034</a></li>
+<li><a href="https://www.ai-hao123.com/zhizhu/luxury-30982277.html">异步事件循环架构设计规范-#035</a></li>
+<li><a href="https://www.mw-wm.com/qiye/contact-95956730.html">异步事件循环架构设计规范-#036</a></li>
+<li><a href="https://www.yx-sf.com/wiki/20907">安全边界与可信凭证规约手册-#037</a></li>
+</ul>
+<h4>3. ⚡ 去中心化数据镜像中心入口 (Decentralized Mirror Registry)</h4>
+<ul>
+<li><a href="https://www.ai-hao123.com/shangye/vacation-87731916.html">北美与欧洲边缘备份节点-#001</a></li>
+<li><a href="https://www.mw-wm.com/sheji/rating-85868617.html">实时主干镜像高速数据源-#002</a></li>
+<li><a href="https://www.yx-sf.com/wiki/31527">北美与欧洲边缘备份节点-#003</a></li>
+<li><a href="https://www.ai-hao123.com/shichang/vendor-50500620.html">自动化快照与增量广播源-#004</a></li>
+<li><a href="https://www.mw-wm.com/chuangxin/folder-62767080.html">亚太核心区域镜像同步中心-#005</a></li>
+<li><a href="https://www.yx-sf.com/wiki/81847">实时主干镜像高速数据源-#006</a></li>
+<li><a href="https://www.ai-hao123.com/qiye/topic-10633132.html">亚太核心区域镜像同步中心-#007</a></li>
+<li><a href="https://www.mw-wm.com/yunsuan/course-67757770.html">实时主干镜像高速数据源-#008</a></li>
+<li><a href="https://www.yx-sf.com/wiki/47474">实时主干镜像高速数据源-#009</a></li>
+<li><a href="https://www.ai-hao123.com/xuexi/news-64358043.html">北美与欧洲边缘备份节点-#010</a></li>
+<li><a href="https://www.mw-wm.com/fenxi/web-16786982.html">亚太核心区域镜像同步中心-#011</a></li>
+<li><a href="https://www.yx-sf.com/tech/75286">北美与欧洲边缘备份节点-#012</a></li>
+<li><a href="https://www.ai-hao123.com/shichang/sales-67048980.html">亚太核心区域镜像同步中心-#013</a></li>
+<li><a href="https://www.mw-wm.com/yingyong/expense-63529791.html">自动化快照与增量广播源-#014</a></li>
+<li><a href="https://www.yx-sf.com/tech/43947">自动化快照与增量广播源-#015</a></li>
+<li><a href="https://www.ai-hao123.com/yingxiao/research-61291297.html">冷热数据分层镜像归档中心-#016</a></li>
+<li><a href="https://www.mw-wm.com/jiaoliu/device-33746444.html">亚太核心区域镜像同步中心-#017</a></li>
+<li><a href="https://www.yx-sf.com/tech/23397">实时主干镜像高速数据源-#018</a></li>
+<li><a href="https://www.ai-hao123.com/hezuo/reminder-47033533.html">冷热数据分层镜像归档中心-#019</a></li>
+<li><a href="https://www.mw-wm.com/xinwen/innovation-15087406.html">亚太核心区域镜像同步中心-#020</a></li>
+<li><a href="https://www.yx-sf.com/tech/9849">北美与欧洲边缘备份节点-#021</a></li>
+<li><a href="https://www.ai-hao123.com/pingtai/sales-28323911.html">亚太核心区域镜像同步中心-#022</a></li>
+<li><a href="https://www.mw-wm.com/guanjianci/affordable-57531342.html">冷热数据分层镜像归档中心-#023</a></li>
+<li><a href="https://www.yx-sf.com/tech/35159">冷热数据分层镜像归档中心-#024</a></li>
+<li><a href="https://www.ai-hao123.com/jianzhan/analytics-50337715.html">实时主干镜像高速数据源-#025</a></li>
+<li><a href="https://www.mw-wm.com/kuangjia/technology-77966715.html">冷热数据分层镜像归档中心-#026</a></li>
+<li><a href="https://www.yx-sf.com/news/3976">实时主干镜像高速数据源-#027</a></li>
+<li><a href="https://www.ai-hao123.com/suanfa/notification-24548524.html">实时主干镜像高速数据源-#028</a></li>
+<li><a href="https://www.mw-wm.com/xitong/learning-19349033.html">亚太核心区域镜像同步中心-#029</a></li>
+<li><a href="https://www.yx-sf.com/wiki/82455">自动化快照与增量广播源-#030</a></li>
+<li><a href="https://www.ai-hao123.com/yanjiu/extension-03760656.html">实时主干镜像高速数据源-#031</a></li>
+<li><a href="https://www.mw-wm.com/gongju/travel-38278727.html">亚太核心区域镜像同步中心-#032</a></li>
+<li><a href="https://www.yx-sf.com/news/23153">实时主干镜像高速数据源-#033</a></li>
+<li><a href="https://www.ai-hao123.com/guanjianci/funnel-94817481.html">北美与欧洲边缘备份节点-#034</a></li>
+<li><a href="https://www.mw-wm.com/qiye/event-58998551.html">实时主干镜像高速数据源-#035</a></li>
+<li><a href="https://www.yx-sf.com/tech/81745">北美与欧洲边缘备份节点-#036</a></li>
+<li><a href="https://www.ai-hao123.com/yinqing/communication-57811877.html">北美与欧洲边缘备份节点-#037</a></li>
+</ul>
+<h4>4. 🛡️ 可信存活性验证基准指标 (Trust Verification Standards)</h4>
+<ul>
+<li><a href="https://www.mw-wm.com/jianzhan/url-87283515.html">防重放安全验证与校验哈希-#001</a></li>
+<li><a href="https://www.yx-sf.com/news/22241">权威网络权重与收录基准-#002</a></li>
+<li><a href="https://www.ai-hao123.com/gongsi/schedule-92924429.html">权威网络权重与收录基准-#003</a></li>
+<li><a href="https://www.mw-wm.com/jianzhan/vendor-19045347.html">防重放安全验证与校验哈希-#004</a></li>
+<li><a href="https://www.yx-sf.com/news/96418">权威网络权重与收录基准-#005</a></li>
+<li><a href="https://www.ai-hao123.com/xuexi/beauty-06527165.html">权威网络权重与收录基准-#006</a></li>
+<li><a href="https://www.mw-wm.com/keji/tutorial-62212004.html">防重放安全验证与校验哈希-#007</a></li>
+<li><a href="https://www.yx-sf.com/tech/64737">权威网络权重与收录基准-#008</a></li>
+<li><a href="https://www.ai-hao123.com/anfang/login-70618066.html">去中心化健康检查协议-#009</a></li>
+<li><a href="https://www.mw-wm.com/gongju/sync-04502555.html">去中心化健康检查协议-#010</a></li>
+<li><a href="https://www.yx-sf.com/wiki/34283">防重放安全验证与校验哈希-#011</a></li>
+<li><a href="https://www.ai-hao123.com/youhua/luxury-66306968.html">防重放安全验证与校验哈希-#012</a></li>
+<li><a href="https://www.mw-wm.com/jiaocheng/podcast-27251327.html">去中心化健康检查协议-#013</a></li>
+<li><a href="https://www.yx-sf.com/wiki/115">防重放安全验证与校验哈希-#014</a></li>
+<li><a href="https://www.ai-hao123.com/youhua/success-56295158.html">去中心化健康检查协议-#015</a></li>
+<li><a href="https://www.mw-wm.com/gongxiang/blog-02677541.html">节点连通性与存活探测准则-#016</a></li>
+<li><a href="https://www.yx-sf.com/wiki/46048">实时延迟与抖动度量规范-#017</a></li>
+<li><a href="https://www.ai-hao123.com/qiye/reminder-68920942.html">权威网络权重与收录基准-#018</a></li>
+<li><a href="https://www.mw-wm.com/wendang/share-01691644.html">去中心化健康检查协议-#019</a></li>
+<li><a href="https://www.yx-sf.com/wiki/80560">防重放安全验证与校验哈希-#020</a></li>
+<li><a href="https://www.ai-hao123.com/yingxiao/satisfaction-03715206.html">实时延迟与抖动度量规范-#021</a></li>
+<li><a href="https://www.mw-wm.com/sheji/behavior-46540289.html">实时延迟与抖动度量规范-#022</a></li>
+<li><a href="https://www.yx-sf.com/tech/53993">实时延迟与抖动度量规范-#023</a></li>
+<li><a href="https://www.ai-hao123.com/fuwu/comment-65954941.html">防重放安全验证与校验哈希-#024</a></li>
+<li><a href="https://www.mw-wm.com/kaifa/movie-17428267.html">权威网络权重与收录基准-#025</a></li>
+<li><a href="https://www.yx-sf.com/news/12728">防重放安全验证与校验哈希-#026</a></li>
+<li><a href="https://www.ai-hao123.com/pingtai/fitness-96407529.html">实时延迟与抖动度量规范-#027</a></li>
+<li><a href="https://www.mw-wm.com/gongsi/topic-60006377.html">节点连通性与存活探测准则-#028</a></li>
+<li><a href="https://www.yx-sf.com/tech/68660">防重放安全验证与校验哈希-#029</a></li>
+<li><a href="https://www.ai-hao123.com/hezuo/health-72433832.html">实时延迟与抖动度量规范-#030</a></li>
+<li><a href="https://www.mw-wm.com/youhua/roi-55593828.html">节点连通性与存活探测准则-#031</a></li>
+<li><a href="https://www.yx-sf.com/tech/70282">节点连通性与存活探测准则-#032</a></li>
+<li><a href="https://www.ai-hao123.com/tuiguang/conference-30003826.html">权威网络权重与收录基准-#033</a></li>
+<li><a href="https://www.mw-wm.com/liuliang/performance-83507806.html">实时延迟与抖动度量规范-#034</a></li>
+<li><a href="https://www.yx-sf.com/tech/74897">去中心化健康检查协议-#035</a></li>
+<li><a href="https://www.ai-hao123.com/hezuo/presentation-21534941.html">防重放安全验证与校验哈希-#036</a></li>
+<li><a href="https://www.mw-wm.com/youhua/optimization-49430337.html">防重放安全验证与校验哈希-#037</a></li>
+<li><a href="https://www.yx-sf.com/wiki/80825">节点连通性与存活探测准则-#038</a></li>
+<li><a href="https://www.ai-hao123.com/jiaoliu/download-03109338.html">去中心化健康检查协议-#039</a></li>
+</ul>
+</details>
+
+      </div>
+      <div class="mt-12 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <a href="./index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 ">
+          <span>&larr; 查看更多归档文档</span>
+        </a>
+        <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 ">
+          <span>返回项目 README 首页 &rarr;</span>
+        </a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-20 border-t border-slate-200 bg-white py-12 text-slate-500 text-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <span class="w-6 h-6 rounded bg-slate-800 text-white flex items-center justify-center text-xs font-bold">LM</span>
+      <span>© 2026 <strong>AirCard-mirror-405</strong> - 官方开源高可用拓扑镜像与白皮书</span>
+    </div>
+    <div class="flex items-center gap-4 text-xs text-slate-400">
+      <a href="../index.html" class="hover:text-blue-600 transition-colors ">项目首页</a>
+      <span>•</span>
+      <a href="./index.html" class="hover:text-blue-600 transition-colors ">文档归档菜单</a>
+      <span>•</span>
+      <span>托管于 GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
